@@ -1,0 +1,23 @@
+@startuml
+title ImageViewer - Contenedores
+left to right direction
+
+actor "Usuario" as U
+
+package "ImageViewer" {
+  component "Interfaz gráfica" as UI
+  component "Módulo MVP" as MVP
+  component "ImageLoader" as Loader
+  component "ImageModel" as Model
+}
+
+database "Sistema de archivos" as FS
+
+U --> UI : Interactúa
+UI --> MVP : Acciones
+MVP --> UI : Actualizaciones
+MVP --> Model : Consulta estado
+MVP --> Loader : Solicita carga
+Loader --> FS : Lee archivos
+
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+title ImageViewer - Contexto
+left to right direction
+
+actor "Usuario" as U
+rectangle "ImageViewer" as App
+cloud "Sistema de archivos local" as FS
+
+U --> App : Visualiza y navega imágenes
+App --> FS : Lee archivos
+FS --> App : Imagen o error
+
+@enduml

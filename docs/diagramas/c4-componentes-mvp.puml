@@ -1,0 +1,29 @@
+@startuml
+title ImageViewer - Componentes MVP
+left to right direction
+
+package "View" {
+  interface "ImageView" as IV
+  component "MainFrame" as MF
+  MF ..|> IV
+}
+
+package "Presenter" {
+  component "ImagePresenter" as IP
+}
+
+package "Model" {
+  component "ImageModel" as IM
+}
+
+component "ImageLoader" as IL
+database "Sistema de archivos" as FS
+
+MF --> IP : Acciones
+IP --> IV : Actualiza vista
+IP --> IM : Consulta estado
+IP --> IL : Solicita carga
+IL --> FS : Lee archivo
+IL --> IP : Resultado o error
+
+@enduml
