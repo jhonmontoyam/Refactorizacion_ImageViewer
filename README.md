@@ -5,7 +5,9 @@ Visor de imágenes y proyecto de refactorización.
 
 ## Descripción
 
-ImageViewer es una aplicación diseñada para la visualización, navegación y gestión eficiente de imágenes. Este proyecto tiene como objetivo establecer una arquitectura limpia, modular y mantenible a través de la refactorización de su código base.
+ImageViewer es una aplicación desarrollada en Java que permite seleccionar carpetas locales, visualizar imágenes y navegar entre ellas utilizando opciones de avance y retroceso.
+
+El módulo MVP seleccionado para la re-arquitectura corresponde al módulo de interacción y navegación de imágenes. Este módulo fue elegido porque concentra gran parte de la lógica de navegación, carga de imágenes y actualización de la interfaz, generando problemas de mantenibilidad, rendimiento y fiabilidad.
 
 ## Integrantes
 
@@ -14,15 +16,38 @@ ImageViewer es una aplicación diseñada para la visualización, navegación y g
 
 ## Tecnologías
 
-- **Lenguaje:** (Java)
-- **Framework / UI:** (Por definir)
-- **Herramientas de Build & Test:** (Por definir)
-- **Control de Versiones:** Git
+- Lenguaje: Java
+- Interfaz gráfica: Java Swing
+- IDE: NetBeans
+- Control de versiones: Git
+- Repositorio: GitHub
+
+## Problemas Arquitectónicos Identificados
+
+### 1. Concentración de responsabilidades en MainFrame
+
+La clase MainFrame asume múltiples responsabilidades relacionadas con la interfaz gráfica, navegación y coordinación de carga de imágenes.
+
+**Impacto:** dificulta el mantenimiento y las pruebas unitarias.
+
+### 2. Acoplamiento con la implementación de interfaz gráfica
+
+MainFrame depende directamente de SwingImageDisplay.
+
+**Impacto:** dificulta cambios futuros de tecnología de presentación.
+
+### 3. Manejo deficiente de errores de entrada/salida
+
+FileImageLoader controla errores retornando valores nulos o mensajes de consola.
+
+**Impacto:** riesgo de fallas y comportamiento inesperado del sistema.
 
 ## Instrucciones de Ejecución
 
 ### Requisitos previos
-- [Especificar runtime / versión de lenguaje o herramientas requeridas]
+- Java JDK 8 o superior
+- NetBeans (recomendado)
+- Git
 
 ### Pasos de ejecución
 ```bash
@@ -47,6 +72,7 @@ ImageViewer/
 ├── docs/              # Documentación del proyecto
 │   ├── diagramas/     # Diagramas de arquitectura, clases y secuencias
 │   └── adr/           # Architecture Decision Records (ADRs)
+│   └── arquitectura.md
 ├── tests/             # Pruebas unitarias e integradas
 ├── resources/         # Recursos estáticos y activos del proyecto
 ├── .gitignore         # Archivos e historial excluidos de Git
