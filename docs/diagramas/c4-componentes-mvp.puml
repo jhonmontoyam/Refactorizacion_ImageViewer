@@ -1,29 +1,34 @@
 @startuml
-title ImageViewer - Componentes MVP
-left to right direction
+!include <C4/C4_Component>
 
-package "View" {
-  interface "ImageView" as IV
-  component "MainFrame" as MF
-  MF ..|> IV
+LAYOUT_WITH_LEGEND()
+
+title Diagrama C4 - Nivel 3: Componentes del Módulo MVP
+
+Person(usuario, "Usuario", "Usuario final que interactúa con el visor.")
+
+Container_Boundary(mvp, "Aplicación ImageViewer - Módulo MVP") {
+    Component(main, "Main", "Java Class", "Punto de entrada; configura el Look & Feel y ensambla las dependencias por inyección.")
+    Component(imageView, "ImageView", "Java Interface", "Contrato formal de la vista pasiva para desacoplar el presentador de Swing.")
+    Component(mainFrame, "MainFrame", "Swing JFrame", "Implementa ImageView; contiene el lienzo ImageCanvasPanel, botones y diálogos.")
+    Component(imagePresenter, "ImagePresenter", "Java Class", "Orquestador MVP; procesa acciones, actualiza el modelo e instruye a la vista.")
+    Component(imageModel, "ImageModel", "Java Class", "Almacena el estado en memoria: imagen activa, dimensiones, playlist e índice actual.")
+    Component(imageLoader, "ImageLoader", "Java Service", "Carga, filtra y valida imágenes (.jpg, .png, etc.) desde el sistema de archivos.")
 }
 
-package "Presenter" {
-  component "ImagePresenter" as IP
-}
+System_Ext(fileSystem, "Sistema de Archivos", "Disco local", "Directorios y archivos de imagen.")
 
-package "Model" {
-  component "ImageModel" as IM
-}
+Rel(usuario, mainFrame, "Hace clic en botones (Abrir, Anterior, Siguiente)", "Eventos GUI")
+Rel(main, mainFrame, "Instancia", "new")
+Rel(main, imageModel, "Instancia", "new")
+Rel(main, imageLoader, "Instancia", "new")
+Rel(main, imagePresenter, "Ensambla e inyecta dependencias", "new")
 
-component "ImageLoader" as IL
-database "Sistema de archivos" as FS
-
-MF --> IP : Acciones
-IP --> IV : Actualiza vista
-IP --> IM : Consulta estado
-IP --> IL : Solicita carga
-IL --> FS : Lee archivo
-IL --> IP : Resultado o error
+Rel(mainFrame, imagePresenter, "Notifica acciones del usuario", "handleOpenImage, handleNextImage...")
+Rel(mainFrame, imageView, "Implementa", "implements")
+Rel(imagePresenter, imageView, "Actualiza estado visual y controles", "displayImage, showStatus...")
+Rel(imagePresenter, imageModel, "Actualiza y consulta estado", "setCurrentImage, setPlaylist...")
+Rel(imagePresenter, imageLoader, "Solicita lectura y escaneo", "loadImage, getImageFilesInDirectory")
+Rel(imageLoader, fileSystem, "Lee archivos y filtra extensiones", "ImageIO.read / java.io")
 
 @enduml

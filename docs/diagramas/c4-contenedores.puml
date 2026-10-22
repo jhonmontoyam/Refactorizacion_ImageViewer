@@ -1,23 +1,26 @@
 @startuml
-title ImageViewer - Contenedores
-left to right direction
+!include <C4/C4_Container>
 
-actor "Usuario" as U
+LAYOUT_WITH_LEGEND()
 
-package "ImageViewer" {
-  component "Interfaz gráfica" as UI
-  component "Módulo MVP" as MVP
-  component "ImageLoader" as Loader
-  component "ImageModel" as Model
+title Diagrama C4 - Nivel 2: Contenedores (ImageViewer)
+
+Person(usuario, "Usuario", "Usuario final de la aplicación.")
+
+System_Boundary(c1, "Límite del Sistema ImageViewer") {
+    Container(ui, "Interfaz Gráfica (View)", "Java Swing, AWT", "Renderiza la ventana, la barra de herramientas, el lienzo escalado y captura las acciones del usuario.")
+    Container(presenter, "Presentador (Presenter)", "Java 17", "Orquesta la lógica de presentación, gestiona eventos y sincroniza el modelo con la vista.")
+    Container(model, "Modelo de Datos (Model)", "Java 17", "Mantiene en memoria el estado de la imagen actual, la lista ordenada de navegación y los índices.")
+    Container(service, "Servicio de Carga (Service)", "Java ImageIO / NIO", "Valida extensiones, escanea directorios y decodifica imágenes en memoria.")
 }
 
-database "Sistema de archivos" as FS
+System_Ext(fileSystem, "Sistema de Archivos Local", "Disco del SO", "Almacena los archivos físicos de imágenes en formatos compatibles.")
 
-U --> UI : Interactúa
-UI --> MVP : Acciones
-MVP --> UI : Actualizaciones
-MVP --> Model : Consulta estado
-MVP --> Loader : Solicita carga
-Loader --> FS : Lee archivos
+Rel(usuario, ui, "Interactúa con botones y diálogos", "Swing GUI")
+Rel(ui, presenter, "Delega eventos de usuario (abrir, navegar)", "Llamadas a métodos")
+Rel(presenter, ui, "Instruye qué mostrar y habilita controles", "ImageView (Passive View)")
+Rel(presenter, model, "Consulta y actualiza estado de navegación", "Llamadas a métodos")
+Rel(presenter, service, "Solicita carga de imágenes y lista de archivos", "Llamadas a métodos")
+Rel(service, fileSystem, "Lee bytes de archivos e inspecciona carpetas", "File I/O")
 
 @enduml
