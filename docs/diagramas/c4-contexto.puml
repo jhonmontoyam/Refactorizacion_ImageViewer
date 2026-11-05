@@ -1,13 +1,16 @@
 @startuml
-title ImageViewer - Contexto
-left to right direction
+!include <C4/C4_Context>
 
-actor "Usuario" as U
-rectangle "ImageViewer" as App
-cloud "Sistema de archivos local" as FS
+LAYOUT_WITH_LEGEND()
 
-U --> App : Visualiza y navega imágenes
-App --> FS : Lee archivos
-FS --> App : Imagen o error
+title Diagrama C4 - Nivel 1: Contexto de Sistema (ImageViewer)
+
+Person(usuario, "Usuario", "Persona que interactúa con la aplicación para abrir, visualizar y navegar imágenes locales.")
+System(imageViewer, "ImageViewer", "Aplicación de escritorio Java que permite la visualización fluida, escalado proporcional y navegación secuencial de imágenes.")
+System_Ext(fileSystem, "Sistema de Archivos Local", "Almacenamiento del sistema operativo donde residen los directorios e imágenes (JPG, PNG, GIF, BMP).")
+
+Rel(usuario, imageViewer, "Abre archivos, navega imágenes (anterior/siguiente)", "GUI Swing")
+Rel(imageViewer, fileSystem, "Lee archivos de imagen y lista contenidos de directorios", "Java File I/O")
+Rel(fileSystem, imageViewer, "Retorna datos de imagen o errores de E/S", "I/O Streams")
 
 @enduml
